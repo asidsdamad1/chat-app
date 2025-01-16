@@ -1,6 +1,5 @@
 package org.asi.authservice.service.impl;
 
-import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.asi.authservice.model.User;
@@ -10,7 +9,6 @@ import org.asi.exceptionutils.AlreadyExistsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {

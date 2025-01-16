@@ -46,6 +46,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "enabled")
     private Boolean enabled = false;
 
