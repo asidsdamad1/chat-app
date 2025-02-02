@@ -2,35 +2,36 @@ package org.asi.authservice.validate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.asi.authservice.constants.ApplicationConstants;
-import org.asi.authservice.web.controller.payload.UserRequest;
+import org.asi.dtomodels.UserRequest;
+import org.asi.exceptionutils.InvalidDataException;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
-public class UserValidate extends AbstractValidation{
+public class UserValidate {
     public void validateCreate(UserRequest request) {
-        String userName = request.getUserName();
-        String password = request.getPassword();
-        String email = request.getPassword();
-        String firstName = request.getPassword();
-        String lastName = request.getPassword();
+        String userName = request.username();
+        String password = request.password();
+        String email = request.email();
+        String firstName = request.firstName();
+        String lastName = request.lastName();
 
         if (StringUtils.isEmpty(userName) || StringUtils.isBlank(userName) || !StringUtils.isAlphanumeric(userName)) {
-            getMessageDes().add("Invalid username");
+            throw new InvalidDataException("Invalid username");
         }
         if (StringUtils.isEmpty(password) || StringUtils.isBlank(password)) {
-            getMessageDes().add("Invalid password");
+            throw new InvalidDataException("Invalid password");
         }
         if (password.length() < ApplicationConstants.USER_PASSWORD_MIN_LENGTH
                 || password.length() > ApplicationConstants.USER_PASSWORD_MAX_LENGTH) {
-            getMessageDes().add("Invalid password length");
+           throw new InvalidDataException("Invalid password length");
         }
         if (!new EmailValidator().isValid(email, null)) {
-            getMessageDes().add("Invalid email");
+           throw new InvalidDataException("Invalid email");
         }
         if (StringUtils.isEmpty(firstName) || StringUtils.isBlank(firstName)) {
-            getMessageDes().add("Invalid first name");
+           throw new InvalidDataException("Invalid first name");
         }
         if (StringUtils.isEmpty(lastName) || StringUtils.isBlank(lastName)) {
-            getMessageDes().add("Invalid last name");
+           throw new InvalidDataException("Invalid last name");
         }
     }
 }

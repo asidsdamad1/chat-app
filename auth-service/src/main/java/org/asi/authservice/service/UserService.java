@@ -1,9 +1,11 @@
 package org.asi.authservice.service;
 
+import org.asi.authservice.dto.UserResponse;
 import org.asi.authservice.model.User;
+import org.asi.dtomodels.UserRequest;
 
 public interface UserService {
-    void createUser(String username, String password, String email, String firstName, String lastName);
+    User createUser(UserRequest userRequest);
 
     void activateUser(String activationKey);
 

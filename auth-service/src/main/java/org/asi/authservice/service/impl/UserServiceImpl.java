@@ -1,14 +1,23 @@
 package org.asi.authservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.asi.authservice.model.User;
 import org.asi.authservice.repository.UserRepository;
 import org.asi.authservice.service.UserService;
+import org.asi.authservice.validate.UserValidate;
+import org.asi.dtomodels.UserRequest;
 import org.asi.exceptionutils.AlreadyExistsException;
+import org.asi.exceptionutils.InvalidDataException;
+import org.asi.exceptionutils.NotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -16,25 +25,28 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void createUser(String username, String password, String email, String firstName, String lastName) {
-        if (userRepository.existsByUsernameIgnoreCase(username)) {
-            throw new AlreadyExistsException("User with username %s already exists".formatted(username));
+    public User createUser(UserRequest userRequest) {
+        log.info("Creating user with username: {}", userRequest.username());
+        if (userRepository.existsByUsernameIgnoreCase(userRequest.username())) {
+            throw new AlreadyExistsException("User with username %s already exists".formatted(userRequest.username()));
         }
 
-        if (userRepository.existsByUsernameIgnoreCase(email)) {
-            throw new AlreadyExistsException("User with username %s already exists".formatted(email));
+        if (userRepository.existsByEmailIgnoreCase(userRequest.email())) {
+            throw new AlreadyExistsException("User with username %s already exists".formatted(userRequest.email()));
         }
+
+        new UserValidate().validateCreate(userRequest);
 
         var user = User.builder()
-                .username(username)
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
+                .username(userRequest.username())
+                .password(passwordEncoder.encode(userRequest.password()))
+                .email(userRequest.email())
+                .firstName(userRequest.firstName())
+                .lastName(userRequest.lastName())
                 .enabled(false)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -44,16 +56,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(String userId) {
-        return null;
+        return userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new NotFoundException("Not found user with id: " + userId));
     }
 
     @Override
     public User modifyUser(String userId, String firstName, String lastName) {
-        return null;
+        var user = findUserById(userId);
+        if (!user.id().toString().equals(userId)) {
+            throw new InvalidDataException("Incorrect user id");
+        }
+
+        if (isNotEmpty(firstName)) {
+            user.firstName(firstName);
+        }
+
+        if (isNotEmpty(lastName)) {
+            user.firstName(lastName);
+        }
+        return userRepository.save(user);
     }
 
     @Override
     public void changeUserPassword(String userId, String currentPassword, String newPassword) {
+        var user = findUserById(userId);
+        if (!user.id().toString().equals(userId)) {
+            throw new InvalidDataException("Incorrect user id");
+        }
+        if (!passwordEncoder.matches(currentPassword, user.password())) {
+            throw new InvalidDataException("Incorrect current password");
+        }
 
+        user.password(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
