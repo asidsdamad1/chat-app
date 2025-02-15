@@ -20,6 +20,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JWTUtils jwtUtils;
     private final JWTConfig jwtConfig;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         var authorizationHeaderValue = request.getHeader(jwtConfig.getHeader());

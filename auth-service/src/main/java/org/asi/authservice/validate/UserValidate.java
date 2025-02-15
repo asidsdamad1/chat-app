@@ -2,17 +2,17 @@ package org.asi.authservice.validate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.asi.authservice.constants.ApplicationConstants;
-import org.asi.dtomodels.UserRequest;
+import org.asi.dtomodels.UserDTO;
 import org.asi.exceptionutils.InvalidDataException;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 public class UserValidate {
-    public void validateCreate(UserRequest request) {
-        String userName = request.username();
-        String password = request.password();
-        String email = request.email();
-        String firstName = request.firstName();
-        String lastName = request.lastName();
+    public void validateCreate(UserDTO request) {
+        String userName = request.getUsername();
+        String password = request.getPassword();
+        String email = request.getEmail();
+        String firstName = request.getFirstName();
+        String lastName = request.getLastName();
 
         if (StringUtils.isEmpty(userName) || StringUtils.isBlank(userName) || !StringUtils.isAlphanumeric(userName)) {
             throw new InvalidDataException("Invalid username");

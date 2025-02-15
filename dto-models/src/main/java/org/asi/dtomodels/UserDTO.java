@@ -8,11 +8,12 @@ import lombok.experimental.Accessors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(fluent = true)
-public class UserRequest {
+public class UserDTO {
+    private String id;
     private String username;
     private String password;
     private String email;
     private String firstName;
     private String lastName;
+
 }

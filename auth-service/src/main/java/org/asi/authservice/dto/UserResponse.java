@@ -16,10 +16,10 @@ public class UserResponse {
 
     public static UserResponse of(User user) {
         return UserResponse.builder()
-                .userName(user.username())
-                .email(user.email())
-                .firstName(user.firstName())
-                .lastName(user.lastName())
+                .userName(user.getUsername())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .build();
     }
 }

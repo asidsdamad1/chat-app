@@ -6,7 +6,7 @@ import org.asi.authservice.model.User;
 import org.asi.authservice.repository.UserRepository;
 import org.asi.authservice.service.UserService;
 import org.asi.authservice.validate.UserValidate;
-import org.asi.dtomodels.UserRequest;
+import org.asi.dtomodels.UserDTO;
 import org.asi.exceptionutils.AlreadyExistsException;
 import org.asi.exceptionutils.InvalidDataException;
 import org.asi.exceptionutils.NotFoundException;
@@ -25,24 +25,24 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User createUser(UserRequest userRequest) {
-        log.info("Creating user with username: {}", userRequest.username());
-        if (userRepository.existsByUsernameIgnoreCase(userRequest.username())) {
-            throw new AlreadyExistsException("User with username %s already exists".formatted(userRequest.username()));
+    public User createUser(UserDTO userDTO) {
+        log.info("Creating user with username: {}", userDTO.getUsername());
+        if (userRepository.existsByUsernameIgnoreCase(userDTO.getUsername())) {
+            throw new AlreadyExistsException("User with username %s already exists".formatted(userDTO.getUsername()));
         }
 
-        if (userRepository.existsByEmailIgnoreCase(userRequest.email())) {
-            throw new AlreadyExistsException("User with username %s already exists".formatted(userRequest.email()));
+        if (userRepository.existsByEmailIgnoreCase(userDTO.getEmail())) {
+            throw new AlreadyExistsException("User with username %s already exists".formatted(userDTO.getEmail()));
         }
 
-        new UserValidate().validateCreate(userRequest);
+        new UserValidate().validateCreate(userDTO);
 
         var user = User.builder()
-                .username(userRequest.username())
-                .password(passwordEncoder.encode(userRequest.password()))
-                .email(userRequest.email())
-                .firstName(userRequest.firstName())
-                .lastName(userRequest.lastName())
+                .username(userDTO.getUsername())
+                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .email(userDTO.getEmail())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
                 .enabled(false)
                 .build();
 
@@ -63,16 +63,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User modifyUser(String userId, String firstName, String lastName) {
         var user = findUserById(userId);
-        if (!user.id().toString().equals(userId)) {
+        if (!user.getId().toString().equals(userId)) {
             throw new InvalidDataException("Incorrect user id");
         }
 
         if (isNotEmpty(firstName)) {
-            user.firstName(firstName);
+            user.setFirstName(firstName);
         }
 
         if (isNotEmpty(lastName)) {
-            user.firstName(lastName);
+            user.setLastName(lastName);
         }
         return userRepository.save(user);
     }
@@ -80,14 +80,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeUserPassword(String userId, String currentPassword, String newPassword) {
         var user = findUserById(userId);
-        if (!user.id().toString().equals(userId)) {
+        if (!user.getId().toString().equals(userId)) {
             throw new InvalidDataException("Incorrect user id");
         }
-        if (!passwordEncoder.matches(currentPassword, user.password())) {
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new InvalidDataException("Incorrect current password");
         }
 
-        user.password(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }

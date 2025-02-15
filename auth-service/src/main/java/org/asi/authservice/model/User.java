@@ -15,7 +15,6 @@ import java.util.UUID;
 @Setter
 @Entity
 @Builder
-@Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user")

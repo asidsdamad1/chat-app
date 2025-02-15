@@ -5,7 +5,7 @@ import org.asi.authservice.model.User;
 import org.asi.authservice.repository.UserRepository;
 import org.asi.authservice.security.SecurityUserDetailsImpl;
 import org.asi.authservice.service.impl.UserServiceImpl;
-import org.asi.dtomodels.UserRequest;
+import org.asi.dtomodels.UserDTO;
 import org.asi.exceptionutils.AlreadyExistsException;
 import org.asi.exceptionutils.InvalidDataException;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,21 +55,21 @@ class AuthServiceApplicationTests {
     public void shouldCreateUser() {
 
         // given
-        UserRequest userRequest = UserRequest.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .username("username123")
                 .password("secretPass1")
                 .email("test@example.com")
                 .firstName("john")
                 .lastName("smith")
                 .build();
-        given(userRepository.existsByEmailIgnoreCase(userRequest.email())).willReturn(false);
-        given(userRepository.existsByUsernameIgnoreCase(userRequest.username())).willReturn(false);
-        given(passwordEncoder.encode(userRequest.password())).willReturn("hashedPassword");
+        given(userRepository.existsByEmailIgnoreCase(userDTO.email())).willReturn(false);
+        given(userRepository.existsByUsernameIgnoreCase(userDTO.username())).willReturn(false);
+        given(passwordEncoder.encode(userDTO.password())).willReturn("hashedPassword");
         given(userRepository.save(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
 
 
         // when
-        userService.createUser(userRequest);
+        userService.createUser(userDTO);
 
         // then
         verify(userRepository, times(1)).save(any(User.class));
@@ -79,16 +79,16 @@ class AuthServiceApplicationTests {
     public void shouldThrowExceptionWhenEmailAlreadyExists() {
 
         // given
-        UserRequest userRequest = UserRequest.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .username("username123")
                 .password("secretPass1")
                 .email("test@example.com")
                 .firstName("john")
                 .lastName("smith")
                 .build();
-        given(userRepository.existsByEmailIgnoreCase(userRequest.email())).willReturn(true);
+        given(userRepository.existsByEmailIgnoreCase(userDTO.email())).willReturn(true);
 
-        assertThrows(AlreadyExistsException.class, () -> userService.createUser(userRequest));
+        assertThrows(AlreadyExistsException.class, () -> userService.createUser(userDTO));
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -96,29 +96,29 @@ class AuthServiceApplicationTests {
     public void shouldThrowExceptionWhenUsernameAlreadyExists() {
 
         // given
-        UserRequest userRequest = UserRequest.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .username("username123")
                 .password("secretPass1")
                 .email("test@example.com")
                 .firstName("john")
                 .lastName("smith")
                 .build();
-        given(userRepository.existsByUsernameIgnoreCase(userRequest.username())).willReturn(true);
+        given(userRepository.existsByUsernameIgnoreCase(userDTO.username())).willReturn(true);
 
-        assertThrows(AlreadyExistsException.class, () -> userService.createUser(userRequest));
+        assertThrows(AlreadyExistsException.class, () -> userService.createUser(userDTO));
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     public void shouldThrowExceptionWhenUsernameIsNull() {
 
-        assertThrows(InvalidDataException.class, () -> userService.createUser(new UserRequest()));
+        assertThrows(InvalidDataException.class, () -> userService.createUser(new UserDTO()));
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     public void shouldThrowExceptionWhenUsernameIsBlank() {
-        var user = new UserRequest();
+        var user = new UserDTO();
         user.username("      ");
 
         assertThrows(InvalidDataException.class, () -> userService.createUser(user));
@@ -127,7 +127,7 @@ class AuthServiceApplicationTests {
 
     @Test
     public void shouldThrowExceptionWhenPasswordIsBlank() {
-        var user = new UserRequest();
+        var user = new UserDTO();
         user.password("      ");
 
         assertThrows(InvalidDataException.class, () -> userService.createUser(user));

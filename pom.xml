@@ -21,6 +21,8 @@
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <lombok.version>1.18.36</lombok.version>
+        <springdoc-openapi-ui.version>1.5.4</springdoc-openapi-ui.version>
+        <mapstruct.version>1.4.1.Final</mapstruct.version>
     </properties>
 
     <modules>
@@ -65,6 +67,16 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-webflux-ui</artifactId>
+                <version>${springdoc-openapi-ui.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

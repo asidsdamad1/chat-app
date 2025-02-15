@@ -1,13 +1,17 @@
 package org.asi.authservice.config;
 
 import lombok.RequiredArgsConstructor;
+import org.asi.authservice.jwt.JWTBuilder;
 import org.asi.authservice.jwt.JWTConfig;
 import org.asi.authservice.security.JwtAuthenticationFilter;
 import org.asi.authservice.security.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,6 +37,11 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
@@ -51,6 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers(jwtConfig.getAuthEndpoint()).permitAll()
+                                .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

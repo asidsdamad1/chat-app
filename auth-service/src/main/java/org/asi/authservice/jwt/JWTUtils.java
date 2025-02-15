@@ -4,10 +4,19 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.apache.commons.lang3.StringUtils;
 import org.asi.authservice.security.SecurityUserDetailsImpl;
+import org.asi.authservice.web.controller.payload.AuthRequest;
+import org.asi.authservice.web.controller.payload.AuthResponse;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.asi.authservice.jwt.JWTConstants.AUTHORITIES_KEY;
@@ -53,5 +62,6 @@ public class JWTUtils {
         }
         return null;
     }
+
 
 }
