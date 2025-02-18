@@ -3,12 +3,12 @@ package org.asi.authservice.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -52,6 +52,18 @@ public class User {
 
     @Column(name = "enabled")
     private Boolean enabled = false;
+
+    @Column(name = "activation_key", length = 124, unique = true)
+    private String activationKey;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            schema = "role",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_name", referencedColumnName = "name")}
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public String toString() {
