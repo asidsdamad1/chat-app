@@ -44,7 +44,7 @@ public class AuthorizationController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = AuthResponse.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<String> fakeLogin(@Parameter(description = "Username and password",
+    public ResponseEntity<AuthResponse> fakeLogin(@Parameter(description = "Username and password",
             required = true, schema = @Schema(implementation = AuthRequest.class))
                           @RequestBody AuthRequest authRequestModel) {
 
@@ -59,7 +59,11 @@ public class AuthorizationController {
         } catch (BadCredentialsException e) {
             throw new UnauthenticatedException("Incorrect username or password");
         }
+        var authResponse = AuthResponse.builder()
+                .accessToken(jwtBuilder.buildToken(authentication))
+                .refreshToken(jwtBuilder.buildToken(authentication))
+                .build();
 
-        return ResponseEntity.ok(jwtBuilder.buildToken(authentication));
+        return ResponseEntity.ok(authResponse);
     }
 }
