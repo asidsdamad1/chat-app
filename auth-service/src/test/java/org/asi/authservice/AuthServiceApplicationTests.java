@@ -62,9 +62,9 @@ class AuthServiceApplicationTests {
                 .firstName("john")
                 .lastName("smith")
                 .build();
-        given(userRepository.existsByEmailIgnoreCase(userDTO.email())).willReturn(false);
-        given(userRepository.existsByUsernameIgnoreCase(userDTO.username())).willReturn(false);
-        given(passwordEncoder.encode(userDTO.password())).willReturn("hashedPassword");
+        given(userRepository.existsByEmailIgnoreCase(userDTO.getEmail())).willReturn(false);
+        given(userRepository.existsByUsernameIgnoreCase(userDTO.getUsername())).willReturn(false);
+        given(passwordEncoder.encode(userDTO.getPassword())).willReturn("hashedPassword");
         given(userRepository.save(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
 
 
@@ -86,7 +86,7 @@ class AuthServiceApplicationTests {
                 .firstName("john")
                 .lastName("smith")
                 .build();
-        given(userRepository.existsByEmailIgnoreCase(userDTO.email())).willReturn(true);
+        given(userRepository.existsByEmailIgnoreCase(userDTO.getEmail())).willReturn(true);
 
         assertThrows(AlreadyExistsException.class, () -> userService.createUser(userDTO));
         verify(userRepository, never()).save(any(User.class));
@@ -103,7 +103,7 @@ class AuthServiceApplicationTests {
                 .firstName("john")
                 .lastName("smith")
                 .build();
-        given(userRepository.existsByUsernameIgnoreCase(userDTO.username())).willReturn(true);
+        given(userRepository.existsByUsernameIgnoreCase(userDTO.getUsername())).willReturn(true);
 
         assertThrows(AlreadyExistsException.class, () -> userService.createUser(userDTO));
         verify(userRepository, never()).save(any(User.class));
@@ -119,7 +119,7 @@ class AuthServiceApplicationTests {
     @Test
     public void shouldThrowExceptionWhenUsernameIsBlank() {
         var user = new UserDTO();
-        user.username("      ");
+        user.setUsername("      ");
 
         assertThrows(InvalidDataException.class, () -> userService.createUser(user));
         verify(userRepository, never()).save(any(User.class));
@@ -128,7 +128,7 @@ class AuthServiceApplicationTests {
     @Test
     public void shouldThrowExceptionWhenPasswordIsBlank() {
         var user = new UserDTO();
-        user.password("      ");
+        user.setPassword("      ");
 
         assertThrows(InvalidDataException.class, () -> userService.createUser(user));
         verify(userRepository, never()).save(any(User.class));

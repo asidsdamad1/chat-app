@@ -26,10 +26,14 @@
     </properties>
 
     <modules>
+        <module>auth-utils</module>
         <module>auth-service</module>
         <module>exception-utils</module>
         <module>dto-models</module>
         <module>cloud-gateway</module>
+        <module>eureka-server</module>
+        <module>config-server</module>
+        <module>chat-service</module>
 <!--        <module>chat-service</module>-->
     </modules>
 
