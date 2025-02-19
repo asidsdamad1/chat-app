@@ -49,7 +49,6 @@
             <groupId>org.asi</groupId>
             <artifactId>auth-utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
@@ -74,13 +73,6 @@
             <groupId>org.asi</groupId>
             <artifactId>dto-models</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.asi</groupId>
-            <artifactId>dto-models</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
