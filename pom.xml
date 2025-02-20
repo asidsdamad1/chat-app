@@ -28,6 +28,7 @@
 
     <modules>
         <module>auth-utils</module>
+        <module>chat-messages-service</module>
         <module>auth-service</module>
         <module>exception-utils</module>
         <module>dto-models</module>

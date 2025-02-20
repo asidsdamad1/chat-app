@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.apache.commons.lang3.StringUtils;
 import org.asi.authutils.security.SecurityUserDetailsImpl;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 import static org.asi.authutils.jwt.JWTConstants.AUTHORITIES_KEY;
 import static org.asi.authutils.jwt.JWTConstants.USERNAME_KEY;
 
-@Configuration
 public class JWTUtils {
 
     private final Algorithm sign;

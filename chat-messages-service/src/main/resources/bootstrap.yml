@@ -1,0 +1,5 @@
+spring:
+  cloud:
+    config:
+      name: commons, chat-messages
+      uri: http://localhost:8888
