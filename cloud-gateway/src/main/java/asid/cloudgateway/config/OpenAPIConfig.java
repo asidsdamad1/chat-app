@@ -2,6 +2,7 @@ package asid.cloudgateway.config;
 
 import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.SwaggerUiConfigParameters;
+import org.springdoc.core.SwaggerUiConfigProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,16 @@ public class OpenAPIConfig {
 
     public OpenAPIConfig(RouteLocator locator) {
         this.locator = locator;
+    }
+
+    @Bean
+    public SwaggerUiConfigProperties swaggerUiConfigProperties() {
+        return new SwaggerUiConfigProperties();
+    }
+
+    @Bean
+    public SwaggerUiConfigParameters swaggerUiConfigParameters(SwaggerUiConfigProperties swaggerUiConfigProperties) {
+        return new SwaggerUiConfigParameters(swaggerUiConfigProperties);
     }
 
     @Bean

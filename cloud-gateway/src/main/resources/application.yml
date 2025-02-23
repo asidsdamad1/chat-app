@@ -1,4 +1,50 @@
 spring:
   application:
     name: cloud-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+  config:
+    import: "configserver:http://localhost:8123"
+  main:
+    web-application-type: reactive
+server:
+  address: 127.0.0.1
+  port: 8080
 
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    prefer-ip-address: false
+    ip-address: 127.0.0.1
+    hostname: localhost
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka
+    register-with-eureka: false
+    fetch-registry: true
+    enabled: true
+cors:
+  allowed-origins:
+    - "http://localhost:4200"
+  allowed-headers:
+    - "Access-Control-Allow-Headers"
+    - "Access-Control-Allow-Origin"
+    - "Access-Control-Request-Method"
+    - "Access-Control-Request-Headers"
+    - "Origin"
+    - "Cache-Control"
+    - "Content-Type"
+    - "Authorization"
+    - "Accept-Language"
+    - "Content-Language"
+  allowed-methods:
+    - "POST"
+    - "GET"
+    - "PUT"
+    - "PATCH"
+    - "DELETE"
