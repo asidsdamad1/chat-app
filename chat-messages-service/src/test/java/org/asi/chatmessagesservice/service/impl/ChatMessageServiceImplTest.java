@@ -1,5 +1,6 @@
 package org.asi.chatmessagesservice.service.impl;
 
+import org.asi.exceptionutils.InvalidDataException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.asi.chatmessagesservice.constant.MessageStatus;
 import org.asi.chatmessagesservice.document.ChatMessage;
 import org.asi.chatmessagesservice.repository.ChatMessageRepository;
-import pl.kubaretip.exceptionutils.InvalidDataException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -36,9 +36,10 @@ public class ChatMessageServiceImplTest {
     void shouldSaveMessage() {
 
         // given
-        var newChatMessage = new ChatMessage();
-        newChatMessage.setId("1");
-        newChatMessage.setStatus(MessageStatus.RECEIVED);
+        var newChatMessage = ChatMessage.builder()
+                .id("1")
+                .status(MessageStatus.RECEIVED)
+                .build();
         given(chatMessageRepository.save(any())).willReturn(Mono.just(newChatMessage));
 
         // when

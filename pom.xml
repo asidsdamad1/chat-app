@@ -36,7 +36,7 @@
         <module>eureka-server</module>
         <module>config-server</module>
         <module>chat-service</module>
-<!--        <module>chat-service</module>-->
+        <module>messages-websocket-service</module>
     </modules>
 
     <dependencies>

@@ -9,6 +9,8 @@ spring:
             - file:///D:/springboot/chat-app-micro-config/files
             - file:///D:/springboot/chat-app-micro-config/files/service/commons
             - file:///D:/springboot/chat-app-micro-config/files/service/auth-service
+            - file:///D:/springboot/chat-app-micro-config/files/service/chat-messages-service
+            - file:///D:/springboot/chat-app-micro-config/files/service/messages-websocket-service
   profiles:
     active: native
 logging:
