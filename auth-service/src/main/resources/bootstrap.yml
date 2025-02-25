@@ -1,10 +1,8 @@
 spring:
   application:
     name: auth-service
-  cloud:
-    config:
-      name: auth, commons
   config:
+    name: auth, commons
     import: "configserver:http://localhost:8123"
   profiles:
     active: dev

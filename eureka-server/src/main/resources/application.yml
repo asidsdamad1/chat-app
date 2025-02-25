@@ -1,7 +1,10 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: eureka
-
-server:
-  port: 8888
+  config:
+    import: "configserver:http://localhost:8123"
+#server:
+#  port: 8888
 

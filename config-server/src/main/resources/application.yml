@@ -5,6 +5,12 @@ spring:
     config:
       server:
         native:
-          search-locations: D:\springboot\spring-micro-websocket-chat-config\files
+          search-locations:
+            - file:///D:/springboot/chat-app-micro-config/files
+            - file:///D:/springboot/chat-app-micro-config/files/service/commons
+            - file:///D:/springboot/chat-app-micro-config/files/service/auth-service
   profiles:
     active: native
+logging:
+  level:
+    org.springframework.cloud.config: DEBUG

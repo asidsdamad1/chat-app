@@ -1,27 +1,12 @@
 spring:
   application:
     name: chat-messages
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: chat_messages_service_database
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    listener:
-      simple:
-        default-requeue-rejected: false
-
+  cloud:
+    config:
+      name: commons, chat-messages
+  config:
+    import: "configserver:http://localhost:8123"
+  profiles:
+    active: dev
   main:
     web-application-type: reactive
-
-server:
-  port: 9996
-
-logging:
-  level:
-    org:
-      asi: debug
