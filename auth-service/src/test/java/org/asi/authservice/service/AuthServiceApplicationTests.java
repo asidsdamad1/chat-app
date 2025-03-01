@@ -1,4 +1,4 @@
-package org.asi.authservice;
+package org.asi.authservice.service;
 
 
 import org.asi.authservice.model.User;

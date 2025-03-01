@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@RestControllerAdvice
 public interface CommonExceptionHandler {
 
     @ExceptionHandler(value = NotFoundException.class)
@@ -33,7 +34,7 @@ public interface CommonExceptionHandler {
 
     @ExceptionHandler(value = InvalidDataException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    default ErrorResponse handleInvalidData(final NotFoundException ex, HttpServletRequest request) {
+    default ErrorResponse handleInvalidData(final InvalidDataException ex, HttpServletRequest request) {
         return ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .detail(ex.getMessage())
