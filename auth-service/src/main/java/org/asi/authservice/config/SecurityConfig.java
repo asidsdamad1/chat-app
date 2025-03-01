@@ -1,5 +1,7 @@
 package org.asi.authservice.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.asi.authservice.jwt.JWTBuilder;
 import org.asi.authservice.jwt.JWTConfig;
@@ -20,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -28,9 +31,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private static String[] WHITE_LIST_URL = {
             "/v3/api-docs/**",
-            "/swagger-resources/**",
             "/swagger-ui/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/v3/api-docs/auth-service"
+    };
 
     private final JWTConfig jwtConfig;
     private final UserDetailServiceImpl userDetailsService;
@@ -48,7 +54,6 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

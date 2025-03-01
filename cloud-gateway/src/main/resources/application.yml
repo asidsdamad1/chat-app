@@ -8,6 +8,47 @@ spring:
     web-application-type: reactive
   profiles:
     active: dev
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: AUTH-SERVICE
+          uri: http://localhost:9999
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - name: RewritePath
+              args:
+                regexp: "/auth-service/(?<remaining>.*)"
+                replacement: "/${remaining}"
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/?(?<segment>.*), /${segment}/v3/api-docs
 logging:
   level:
     org.springframework.cloud.config: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: restart,health,info
+  endpoint:
+    restart:
+      enabled: true
+#springdoc:
+#  swagger-ui:
+#    use-root-path: true

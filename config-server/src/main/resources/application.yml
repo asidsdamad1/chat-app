@@ -12,7 +12,7 @@ spring:
             - file:///D:/springboot/chat-app-micro-config/files/service/chat-messages-service
             - file:///D:/springboot/chat-app-micro-config/files/service/messages-websocket-service
   profiles:
-    active: native
+    active: native, dev
 logging:
   level:
     org.springframework.cloud.config: DEBUG
