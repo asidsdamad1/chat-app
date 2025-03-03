@@ -22,7 +22,7 @@ public interface CommonExceptionHandler {
     }
 
     @ExceptionHandler(value = AlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     default ErrorResponse handleAlreadyExists(final AlreadyExistsException ex, HttpServletRequest request) {
         return ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())

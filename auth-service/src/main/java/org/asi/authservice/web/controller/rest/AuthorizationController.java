@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.asi.authservice.jwt.JWTBuilder;
-import org.asi.authservice.jwt.JWTUtils;
 import org.asi.authservice.web.controller.payload.AuthRequest;
 import org.asi.authservice.web.controller.payload.AuthResponse;
 import org.asi.exceptionutils.UnauthenticatedException;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  * Implemented and automatically overridden by Spring Security filters.
  * Request mapping value coming from JWTConfig class
  *
- * @see org.asi.authservice.jwt.JWTConfig
+ * @see
  */
 @Tag(name = "Authorization", description = "Login endpoint")
 @RequestMapping(value = "/authenticate", produces = MediaType.APPLICATION_JSON_VALUE)
