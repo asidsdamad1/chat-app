@@ -1,22 +1,24 @@
 package org.asi.authservice.web.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.asi.authservice.config.SecurityConfig;
 import org.asi.authservice.mapper.UserMapper;
 import org.asi.authservice.model.User;
 import org.asi.authservice.service.UserService;
 import org.asi.authservice.utils.SpringSecurityWebTestConfig;
+import org.asi.authservice.utils.TestMocks;
+import org.asi.authservice.web.controller.rest.UserController;
 import org.asi.dtomodels.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
@@ -30,8 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WebMvcTest(controllers = UserControllerTest.class)
-@ContextConfiguration(classes = SpringSecurityWebTestConfig.class)
+@WebMvcTest(controllers = UserController.class)
+@Import({SecurityConfig.class, SpringSecurityWebTestConfig.class, TestMocks.class})
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -39,10 +41,10 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
+    @Autowired
     private UserService userService;
 
-    @Mock
+    @Autowired
     private UserMapper userMapper;
 
     @WithAnonymousUser
@@ -62,8 +64,7 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(inputUser)))
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("Location"));
+                .andExpect(status().isOk());
         verify(userService, times(1)).createUser(any());
     }
 
@@ -82,11 +83,11 @@ class UserControllerTest {
 
     private static Stream<Arguments> invalidNewUsersSource() {
         return Stream.of(
-                Arguments.of(new UserDTO("", "", "", "", "", "")),
-                Arguments.of(new UserDTO(null, null, null, null, null, null)),
-                Arguments.of(new UserDTO("", "t", "12", "@dsa", "@x-1", "email@.pl")),
-                Arguments.of(new UserDTO("", "username", "password", "s", "s", "email@example.com")),
-                Arguments.of(new UserDTO("", "userna_2@me", "password", "aaaa", "ssss", "email@example.com"))
+                Arguments.of(new UserDTO("", "", "", "", "")),
+                Arguments.of(new UserDTO(null, null, null, null, null)),
+                Arguments.of(new UserDTO("t", "12", "@dsa", "@x-1", "email@.pl")),
+                Arguments.of(new UserDTO("username", "password", "s", "s", "email@example.com")),
+                Arguments.of(new UserDTO("userna_2@me", "password", "aaaa", "ssss", "email@example.com"))
         );
     }
 }

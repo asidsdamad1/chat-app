@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserDTO userDTO) {
+        System.out.println(userDTO.toString());
         log.info("Creating user with username: {}", userDTO.getUsername());
         if (userRepository.existsByUsernameIgnoreCase(userDTO.getUsername())) {
             throw new AlreadyExistsException("User with username %s already exists".formatted(userDTO.getUsername()));
