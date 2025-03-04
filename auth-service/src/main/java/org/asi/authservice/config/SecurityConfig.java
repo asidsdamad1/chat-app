@@ -61,6 +61,7 @@ public class SecurityConfig {
                         req.requestMatchers(WHITE_LIST_URL).permitAll()
                                 .requestMatchers(jwtConfig().getAuthEndpoint()).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                                .requestMatchers(HttpMethod.PATCH,"/users/activate").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

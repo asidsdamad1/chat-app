@@ -3,7 +3,6 @@ package org.asi.dtomodels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import lombok.experimental.Accessors;
 
 @Getter
 @Setter

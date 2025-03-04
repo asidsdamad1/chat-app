@@ -1,10 +1,12 @@
 package org.asi.authservice.web.controller.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.asi.authservice.mapper.UserMapper;
 import org.asi.authservice.security.SecurityUserDetailsImpl;
+import org.asi.authservice.security.model.CustomUserDetails;
 import org.asi.authservice.service.UserService;
 import org.asi.authservice.web.controller.payload.ChangePassRequest;
 import org.asi.dtomodels.UserDTO;
@@ -21,6 +23,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    @Operation(summary = "Create new user", description = "User registration endpoint", tags = "Registration")
     @PostMapping
     public ResponseEntity<UserDTO> create(@Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userMapper.toDTO(userService.createUser(userDTO)));
@@ -48,11 +51,12 @@ public class UserController {
     public ResponseEntity<Void> changeUserPassword(@PathVariable("id") String userId,
                                                    @Valid @RequestBody ChangePassRequest request,
                                                    Authentication authentication) {
-        var currentUser = (SecurityUserDetailsImpl) authentication.getPrincipal();
-        if (!userId.equals(currentUser.getId())) {
+        var currentUser = (CustomUserDetails) authentication.getPrincipal();
+        var currentUserId = currentUser.getUser().getId().toString();
+        if (!userId.equals(currentUserId)) {
             throw new InvalidDataException("Invalid user id");
         }
-        userService.changeUserPassword(currentUser.getId(), request.getCurrentPassword(), request.getNewPassword());
+        userService.changeUserPassword(currentUserId, request.getCurrentPassword(), request.getNewPassword());
         return ResponseEntity.noContent().build();
     }
 
