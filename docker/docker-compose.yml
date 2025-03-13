@@ -14,3 +14,27 @@ services:
       - "61613:61613" # STOMP port
     command: >
       sh -c "rabbitmq-plugins enable --offline rabbitmq_stomp && rabbitmq-server"
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - 1025:1025 # smtp port
+      - 8025:8025 # web ui port
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: mail_service_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+# Define volumes at root level
+volumes:
+  mongodb_data: {}  # {} means using default driver options
