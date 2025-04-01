@@ -2,19 +2,18 @@ package org.asi.messageswebsocketservice.config;
 
 import org.asi.authutils.jwt.JWTConfig;
 import org.asi.authutils.jwt.JWTUtils;
+import org.asi.authutils.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
-import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
-import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebFluxSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     private static final String[] SWAGGER_AUTH_WHITELIST = {
@@ -26,45 +25,31 @@ public class SecurityConfig {
     };
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
-                                                         ReactiveAuthenticationManager jwtAuthenticationManager,
-                                                         ServerAuthenticationConverter jwtAuthenticationConverter) {
-        http
-                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                .logout(ServerHttpSecurity.LogoutSpec::disable)
-                .cors(cors -> {})
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authenticationManager(jwtAuthenticationManager)
-                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
-                .addFilterBefore(authenticationWebFilter(jwtAuthenticationManager, jwtAuthenticationConverter), SecurityWebFiltersOrder.AUTHENTICATION)
-                .authorizeExchange(auth -> auth
-                        .pathMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
-                        .pathMatchers("/ws").permitAll()
-                        .anyExchange().authenticated()
-                );
-
-        return http.build();
-    }
-
-
-    @Bean
-    public AuthenticationWebFilter authenticationWebFilter(ReactiveAuthenticationManager jwtAuthenticationManager,
-                                                           ServerAuthenticationConverter jwtAuthenticationConverter) {
-        var authenticationWebFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
-        authenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter);
-        return authenticationWebFilter;
-    }
-
-    @Bean
     public JWTConfig jwtConfig() {
         return new JWTConfig();
     }
 
     @Bean
-    public JWTUtils jwtUtils() {
-        return new JWTUtils(jwtConfig());
+    public JWTUtils jwtUtils(JWTConfig jwtConfig) {
+        return new JWTUtils(jwtConfig);
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JWTUtils jwtUtils, JWTConfig jwtConfig) {
+        return new JwtAuthenticationFilter(jwtUtils, jwtConfig);
+    }
 
+    @Bean
+    public SecurityFilterChain securityWebFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req ->
+                        req.requestMatchers(SWAGGER_AUTH_WHITELIST).permitAll()
+                                .requestMatchers("/ws/**", "/topic/**", "/app/**").permitAll()
+                                .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 }

@@ -14,7 +14,6 @@ import java.util.Date;
 @Component
 public class WebSocketConnectionListener {
 
-
     @EventListener(SessionConnectEvent.class)
     public void handleWebsocketConnectListener(SessionConnectEvent event) {
         log.debug("Session connected : {}", new Date().toString());

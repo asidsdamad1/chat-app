@@ -1,6 +1,7 @@
 package org.asi.messageswebsocketservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.asi.messageswebsocketservice.security.AuthChannelInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -14,7 +15,6 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.asi.messageswebsocketservice.security.AuthChannelInterceptor;
 
 import java.util.List;
 
@@ -50,25 +50,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*");
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry
-                .setApplicationDestinationPrefixes("/app")
-                .enableStompBrokerRelay("/topic/")
-                .setUserDestinationBroadcast("/topic/log-unresolved-user")
-                .setUserRegistryBroadcast("/topic/log-user-registry")
-                .setSystemLogin(this.systemLogin)
-                .setSystemPasscode(this.systemPasscode)
+        registry.setApplicationDestinationPrefixes("/app")
+                .enableStompBrokerRelay("/topic", "/queue")
+                .setRelayHost(this.relayHost)
+                .setRelayPort(this.relayPort)
                 .setClientLogin(this.clientLogin)
                 .setClientPasscode(this.clientPasscode)
-                .setRelayHost(this.relayHost)
-                .setRelayPort(this.relayPort);
+                .setSystemLogin(this.systemLogin)
+                .setSystemPasscode(this.systemPasscode);
     }
-
-
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(authChannelInterceptor);
@@ -87,6 +83,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         return false;
     }
-
-
 }

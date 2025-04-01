@@ -1,25 +1,30 @@
 package org.asi.messageswebsocketservice.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
+import org.springframework.security.messaging.context.SecurityContextChannelInterceptor;
 
 @Configuration
-@EnableWebSocketMessageBroker
-public class WebSocketSecurityConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketSecurityConfig {
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+    @Bean
+    MessageMatcherDelegatingAuthorizationManager.Builder messages() {
+        MessageMatcherDelegatingAuthorizationManager.Builder messages = 
+            MessageMatcherDelegatingAuthorizationManager.builder();
+        
+        // Allow all messages without authentication
+        messages
+            .nullDestMatcher().permitAll()
+            .simpSubscribeDestMatchers("/topic/**", "/queue/**").permitAll()
+            .simpDestMatchers("/app/**").permitAll()
+            .anyMessage().permitAll();
+            
+        return messages;
     }
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/topic");
+    @Bean
+    SecurityContextChannelInterceptor securityContextChannelInterceptor() {
+        return new SecurityContextChannelInterceptor();
     }
 }

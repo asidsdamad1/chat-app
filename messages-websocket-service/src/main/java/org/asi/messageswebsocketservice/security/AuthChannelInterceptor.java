@@ -24,7 +24,7 @@ public class AuthChannelInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         var accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             var authorizationHeaderValue = (String) accessor.getFirstNativeHeader(HttpHeaders.AUTHORIZATION);
             final var authenticationToken = webSocketAuthService.attemptAuthentication(authorizationHeaderValue);
 

@@ -11,7 +11,7 @@ public class RabbitMQConfig {
 
     @Bean
     public FanoutExchange fanoutExchange() {
-        return new FanoutExchange("pl.kubaretip.chatmessagesservice.fanout");
+        return new FanoutExchange("org.asi.chatmessagesservice.fanout");
     }
 
     @Bean
