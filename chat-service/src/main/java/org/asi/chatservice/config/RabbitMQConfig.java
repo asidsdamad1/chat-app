@@ -14,12 +14,12 @@ public class RabbitMQConfig {
 
     @Bean
     public FanoutExchange fanoutExchange() {
-        return new FanoutExchange("pl.kubaretip.authservice.fanout");
+        return new FanoutExchange("org.asi.authservice.fanout");
     }
 
     @Bean
     public Queue newUsersQueue() {
-        return new Queue("pl.kubaretip.chatservice.account");
+        return new Queue("org.asi.chatservice.account");
     }
 
     @Bean
@@ -29,7 +29,7 @@ public class RabbitMQConfig {
 
     @Bean
     public FanoutExchange deletingMessageExchange() {
-        return new FanoutExchange("pl.kubaretip.chatmessagesservice.fanout.deleting");
+        return new FanoutExchange("org.asi.chatmessagesservice.fanout.deleting");
     }
 
     @Bean

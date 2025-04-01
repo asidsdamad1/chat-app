@@ -2,8 +2,10 @@ package org.asi.chatservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.context.annotation.ComponentScan;
 
+@EnableEurekaServer
 @SpringBootApplication
 public class ChatServiceApplication {
 

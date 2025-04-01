@@ -1,4 +1,4 @@
-package org.asi.chatservice.rest;
+package org.asi.chatservice.web.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -3,6 +3,7 @@ package org.asi.authservice.web.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.asi.authservice.config.SecurityConfig;
 import org.asi.authservice.mapper.UserMapper;
+import org.asi.authservice.message.sender.UserSender;
 import org.asi.authservice.model.User;
 import org.asi.authservice.service.UserService;
 import org.asi.authservice.utils.JacksonIgnoreWriteOnlyAccess;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -59,6 +61,9 @@ class UserControllerTest {
     @Autowired
     private UserMapper userMapper;
 
+    @Mock
+    private UserSender userSender;
+
     @BeforeEach
     void setUp() {
         Mockito.reset(userService, userMapper);
@@ -84,6 +89,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(inputUser)))
                 .andExpect(status().isOk());
         verify(userService, times(1)).createUser(any());
+        verify(userSender, times(1)).send(any(UserDTO.class));
     }
 
     @WithAnonymousUser
@@ -98,6 +104,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         verify(userService, never()).createUser(any());
+        verify(userSender, never()).send(any(UserDTO.class));
     }
 
     private static Stream<Arguments> invalidNewUsersSource() {

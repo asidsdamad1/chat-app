@@ -37,6 +37,7 @@
         <module>config-server</module>
         <module>chat-service</module>
         <module>messages-websocket-service</module>
+        <module>mail-service</module>
     </modules>
 
     <dependencies>

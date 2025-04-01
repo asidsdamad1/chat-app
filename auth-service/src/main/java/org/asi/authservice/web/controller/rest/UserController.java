@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.asi.authservice.mapper.UserMapper;
-import org.asi.authservice.security.SecurityUserDetailsImpl;
+import org.asi.authservice.message.sender.UserSender;
 import org.asi.authservice.security.model.CustomUserDetails;
 import org.asi.authservice.service.UserService;
 import org.asi.authservice.web.controller.payload.ChangePassRequest;
@@ -22,11 +22,14 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserSender userSender;
 
     @Operation(summary = "Create new user", description = "User registration endpoint", tags = "Registration")
     @PostMapping
     public ResponseEntity<UserDTO> create(@Valid @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userMapper.toDTO(userService.createUser(userDTO)));
+        UserDTO dto = userMapper.toDTO(userService.createUser(userDTO));
+        userSender.send(dto);
+        return ResponseEntity.ok(dto);
     }
 
     @PatchMapping("/activate")

@@ -1,4 +1,4 @@
-package org.asi.chatservice.rest;
+package org.asi.chatservice.web.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.asi.authutils.SecurityUtils;

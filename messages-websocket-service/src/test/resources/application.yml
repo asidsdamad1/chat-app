@@ -1,0 +1,24 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+    web-application-type: servlet
+  cloud:
+    config:
+      enabled: false
+  security:
+    user:
+      name: test
+      password: test
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+server:
+  port: 0
