@@ -1,6 +1,5 @@
-# Auth Service
+# Chat Application
 
-This project is an authentication service built with Java, Spring Boot, and RabbitMQ. It provides user registration, activation, and password management functionalities.
 
 ## Table of Contents
 
@@ -13,18 +12,18 @@ This project is an authentication service built with Java, Spring Boot, and Rabb
 - [License](#license)
 
 ## Overview
-
-The Auth Service is responsible for managing user authentication and registration. It uses RabbitMQ for messaging and integrates with other services through a fanout exchange.
+This is a chat application built using Spring Boot, which includes several microservices for handling different functionalities such as authentication, messaging, and configuration management.
+It uses RabbitMQ for messaging and Spring Cloud for service discovery and configuration management.
 
 ## Architecture
 
-![Architecture Diagram](path/to/your/architecture-image.png)
+![Architecture Diagram](/storage-img/chat-app.jpg)
 
 ## Getting Started
 
 ### Prerequisites
 
-- Java 17
+- Java 21
 - Maven
 - RabbitMQ
 - Docker (optional, for running RabbitMQ)
