@@ -32,8 +32,7 @@ It uses RabbitMQ for messaging and Spring Cloud for service discovery and config
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/auth-service.git
-    cd auth-service
+    git clone https://github.com/asidsdamad1/chat-app.git
     ```
 
 2. Build the project:
